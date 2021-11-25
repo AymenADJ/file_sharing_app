@@ -16,14 +16,15 @@
         android:src="@drawable/ic_baseline_insert_drive_file_24" />
 
     <TextView
-        android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/folder_image"
         android:id="@+id/folder_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="folder name"
+        android:textColor="@color/black"
         android:textSize="24sp"
-        android:text="folder name" />
+        app:layout_constraintStart_toEndOf="@+id/folder_image"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:textColor="@color/black"
         android:layout_width="wrap_content"

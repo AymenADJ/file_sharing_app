@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.filesharingapp.R;
 import com.example.filesharingapp.activities.adapters.MyAdapter;
@@ -27,6 +28,7 @@ public class ChooseFileActivity extends AppCompatActivity {
         TextView chooseFile = (TextView) findViewById(R.id.choose_file_title);
 
         String path = getIntent().getStringExtra("path");
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
         File root = new File(path);
         File[] files = root.listFiles();
         if(files == null ||files.length == 0){
