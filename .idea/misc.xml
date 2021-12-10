@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/drawable/btn_background.xml" value="0.19282051282051282" />
+        <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/drawable/ic_baseline_insert_drive_file_24.xml" value="0.3828125" />
+        <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/drawable/one_item_drawable.xml" value="0.3828125" />
         <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/layout/activity_choose_file.xml" value="0.3333333333333333" />
         <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/layout/activity_select_files.xml" value="0.36666666666666664" />
         <entry key="..\:/java applications/productivity app/FileSharingApp2/app/src/main/res/layout/one_item_list.xml" value="0.5" />
       </map>
     </option>

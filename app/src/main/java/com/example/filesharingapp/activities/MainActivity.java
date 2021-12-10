@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // send files
                 if(checkPermission()) {
-                    Intent intent= new Intent(MainActivity.this , ChooseFileActivity.class);
-                    String path = Environment.getExternalStorageDirectory().getPath();
+                    Intent intent= new Intent(MainActivity.this , SelectFilesActivity.class);
+                    String path = Environment.getExternalStorageDirectory().toString();
                     intent.putExtra("path",path);
                     startActivity(intent);
                 }

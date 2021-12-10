@@ -3,40 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ChooseFileActivity"
+    tools:context=".activities.SelectFilesActivity"
     android:backgroundTint="@color/white"
     android:background="@color/white"
     >
 
     <TextView
-        android:textColor="@color/black"
+        android:textColor="@color/white"
+        android:background="@color/blue"
         android:visibility="gone"
-        android:id="@+id/choose_file_title"
+        android:id="@+id/select_file_titre"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:text="Choose file" />
+        android:text="SELECT FILES"
+        android:padding="20dp"
+        android:textStyle="bold"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="30dp"
         android:visibility="gone"
         android:id="@+id/all_files_recycleview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/choose_file_title"
+        android:layout_below="@+id/select_file_titre"
         android:layout_alignParentStart="true"
         />
+
     <TextView
-        android:textColor="@color/black"
         android:id="@+id/no_files_mssg"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="No file"
-        android:textSize="32sp"
+        android:text="Empty Folder"
+        android:textColor="@color/grey"
+        android:textSize="20sp"
+        android:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_send"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/blue"
+        android:src="@drawable/ic_baseline_send_24"
         />
 
 </RelativeLayout>

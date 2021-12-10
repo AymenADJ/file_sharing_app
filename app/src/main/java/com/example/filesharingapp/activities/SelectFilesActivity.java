@@ -11,38 +11,51 @@ import android.widget.Toast;
 
 import com.example.filesharingapp.R;
 import com.example.filesharingapp.activities.adapters.MyAdapter;
-
-import org.w3c.dom.Text;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.util.ArrayList;
 
-public class ChooseFileActivity extends AppCompatActivity {
+public class SelectFilesActivity extends AppCompatActivity {
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_file);
+        setContentView(R.layout.activity_select_files);
 
         RecyclerView fileRecyclerView = (RecyclerView) findViewById(R.id.all_files_recycleview);
         TextView noFilesMssg = (TextView) findViewById(R.id.no_files_mssg);
-        TextView chooseFile = (TextView) findViewById(R.id.choose_file_title);
-
+        TextView selectFile = (TextView) findViewById(R.id.select_file_titre);
         String path = getIntent().getStringExtra("path");
-        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
         File root = new File(path);
         File[] files = root.listFiles();
-        if(files == null ||files.length == 0){
+        if (files == null || files.length == 0) {
             fileRecyclerView.setVisibility(View.GONE);
-            chooseFile.setVisibility(View.GONE);
+            selectFile.setVisibility(View.GONE);
             noFilesMssg.setVisibility(View.VISIBLE);
-            return ;
+            return;
         }
         noFilesMssg.setVisibility(View.GONE);
         fileRecyclerView.setVisibility(View.VISIBLE);
-        chooseFile.setVisibility(View.VISIBLE);
+        selectFile.setVisibility(View.VISIBLE);
 
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fileRecyclerView.setAdapter(new MyAdapter(getApplicationContext(),files));
+        MyAdapter manager = new MyAdapter(getApplicationContext(), files);
+        fileRecyclerView.setAdapter(manager);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab_send);
+        fabConfig(manager.getSelectedFiles());
 
     }
+
+    private void fabConfig(ArrayList<File> selectedFiles) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!selectedFiles.isEmpty()){
+                    Toast.makeText(SelectFilesActivity.this, selectedFiles.toString(), Toast.LENGTH_SHORT).show();}
+                }
+            });
+        }
 }
