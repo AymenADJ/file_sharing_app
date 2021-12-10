@@ -2,13 +2,17 @@ package com.example.filesharingapp.activities.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filesharingapp.R;
 import com.example.filesharingapp.activities.SelectFilesActivity;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,33 +61,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Intent intent = new Intent(context, SelectFilesActivity.class);
-                    String path = selectedFile.getAbsolutePath();
-                    intent.putExtra("path", path);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+                    openFolder(selectedFile);
                 }
             });
         } else {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        Uri uri = Uri.parse(selectedFile.getAbsolutePath());
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.fromFile(new File(Environment.getExternalStorageDirectory(), selectedFile.getAbsolutePath())));
-                        intent.setType("*/*");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    openFile(selectedFile);
                 }
 
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-               @Override
+
+                @Override
                public boolean onLongClick(View view) {
                    if(holder.itemView.isSelected()){
                        holder.itemView.setSelected(false);
@@ -98,6 +91,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
+    private void openFile(File selectedFile) {
+      if(selectedFile.exists()){
+          try {
+              Uri uri = Uri.parse("content://"+selectedFile.getAbsolutePath());
+//              Toast.makeText(context, selectedFile.getParent(), Toast.LENGTH_SHORT).show();
+              Intent intent = new Intent(Intent.ACTION_VIEW);
+              intent.setDataAndType(uri,"image/*");
+              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+              context.startActivity(intent);
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
+      else{
+          Toast.makeText(context, "This file does not exist", Toast.LENGTH_SHORT).show();
+      }
+    }
+
+    private void openFolder(File selectedFile) {
+        Intent intent = new Intent(context, SelectFilesActivity.class);
+        String path = selectedFile.getAbsolutePath();
+        intent.putExtra("path", path);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     @Override
     public int getItemCount() {
         return filesAndFolders.length;
@@ -107,14 +126,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         TextView fileName;
         TextView filePath;
         ImageView imageView;
-//        ConstraintLayout container;
-
         public ViewHolder(View itemView) {
             super(itemView);
             fileName = itemView.findViewById(R.id.folder_name);
             filePath = itemView.findViewById(R.id.file_path);
             imageView = itemView.findViewById(R.id.folder_image);
-//            container = itemView.findViewById(R.id.one_item_container);
         }
 
     }

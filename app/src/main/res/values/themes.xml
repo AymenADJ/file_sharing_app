@@ -14,5 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="windowNoTitle" >true</item>
         <item name="android:navigationBarColor">@color/orange</item>
+        <item name="android:colorEdgeEffect">@color/orange</item>
     </style>
 </resources>
