@@ -43,12 +43,20 @@ public class SelectFilesActivity extends AppCompatActivity {
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         MyAdapter manager = new MyAdapter(getApplicationContext(), files);
         fileRecyclerView.setAdapter(manager);
+        numSelected =(TextView) findViewById(R.id.num_selected);
+        numSelected.setText(manager.getNumSeletedFiles()+" files");
 
         fab = (FloatingActionButton) findViewById(R.id.fab_send);
         fabConfig(manager.getSelectedFiles());
 
-        numSelected =(TextView) findViewById(R.id.num_selected);
-        numSelected.setText(manager.getNumSeletedFiles()+" files");
+        // change the the number of selected files
+        fileRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                numSelected =(TextView) findViewById(R.id.num_selected);
+                numSelected.setText(manager.getNumSeletedFiles()+" files");
+            }
+        });
     }
 
     private void fabConfig(ArrayList<File> selectedFiles) {

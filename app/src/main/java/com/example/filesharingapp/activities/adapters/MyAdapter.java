@@ -86,7 +86,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                    holder.itemView.setSelected(true);
                    selectedFiles.add(selectedFile);
                    }
-//                   context.getResources().getString(R.string.num_files)= selectedFiles.size()+" files";
                     return true;
                }
            }
