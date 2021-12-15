@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">File Sharing App</string>
+    <string name="num_files">0 files</string>
 </resources>

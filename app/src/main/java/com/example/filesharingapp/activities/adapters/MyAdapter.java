@@ -40,6 +40,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public ArrayList<File> getSelectedFiles(){
         return selectedFiles;
     }
+    public int getNumSeletedFiles(){
+        return selectedFiles.size();
+    }
     @NonNull
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -83,7 +86,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                    holder.itemView.setSelected(true);
                    selectedFiles.add(selectedFile);
                    }
-                   return true;
+//                   context.getResources().getString(R.string.num_files)= selectedFiles.size()+" files";
+                    return true;
                }
            }
 

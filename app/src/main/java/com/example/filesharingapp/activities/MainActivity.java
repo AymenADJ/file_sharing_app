@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.Theme_FileSharingApp);
         setContentView(R.layout.activity_main);
         sendBtn = (Button) findViewById(R.id.send_btn);
         sendBtn.setHeight(getApplicationContext().getResources().getDisplayMetrics().heightPixels /2);

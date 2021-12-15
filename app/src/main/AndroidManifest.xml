@@ -9,7 +9,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FileSharingApp">
+        android:theme="@style/Theme.SplashScreen">
         <activity
             android:name=".activities.SelectFilesActivity"
             android:exported="false" />
