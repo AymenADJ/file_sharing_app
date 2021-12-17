@@ -5,69 +5,67 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.activities.repository.WifiDirectDevice;
 
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
-    DiscoveryPeersActivity discoveryPeersActivity;
+    DiscoveryPeersActivity activity;
     WifiP2pManager manager;
     WifiP2pManager.Channel channel;
+    WifiManager wifi;
+
     public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, DiscoveryPeersActivity discoveryPeersActivity) {
-    this.discoveryPeersActivity = discoveryPeersActivity;
-    this.manager = manager;
-    this.channel = channel;
+        this.activity = discoveryPeersActivity;
+        this.manager = manager;
+        this.channel = channel;
+        this.wifi = wifi;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)){
-            int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE , -1);
-            if(state == WifiP2pManager.WIFI_P2P_STATE_ENABLED){
-                //wifi p2p enabled
-                if(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)){
-                    // the peer list has changed
-                    if(this.manager!=null){
-                        if (ActivityCompat.checkSelfPermission(this.discoveryPeersActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
+        if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
+            // Check to see if Wi-Fi is enabled and notify appropriate activity
+            int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+            if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+                // Wifi P2P is enabled
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    manager.requestPeers(this.channel, new WifiP2pManager.PeerListListener() {
+                        @Override
+                        public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
+                            activity.devices.clear();
+                            for (WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()) {
+                                activity.devices.add(new WifiDirectDevice(device.deviceName, device.deviceAddress));
+                            }
+                            if (wifiP2pDeviceList.getDeviceList().size() == 0){
+                                Toast.makeText(activity, "No device found", Toast.LENGTH_SHORT).show();
+                                activity.findViewById(R.id.no_device_mssg).setVisibility(View.VISIBLE);
+                            }else{
+                                activity.findViewById(R.id.no_device_mssg).setVisibility(View.GONE);
+                            }
+                            activity.adapter.notifyDataSetChanged();
                         }
-                        this.manager.requestPeers(this.channel, new WifiP2pManager.PeerListListener() {
-                                @Override
-                                public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-                                    discoveryPeersActivity.devices.clear();
-                                    for (WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()){
-                                        String name = device.deviceName;
-                                        String address = device.deviceAddress;
-                                        WifiDirectDevice wifiDirectDevice = new WifiDirectDevice(name , address);
-                                        discoveryPeersActivity.devices.add(wifiDirectDevice);
-                                    }
-                                    if(wifiP2pDeviceList.getDeviceList().size() ==0)
-                                        Toast.makeText(discoveryPeersActivity, "No device found", Toast.LENGTH_SHORT).show();
-                                    //add discovered peers in the recyclerview
-                                    discoveryPeersActivity.adapter.notifyDataSetChanged();
-                                }
-                            });
-
-                    }
+                    });
                 }
-                if(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)){
-                    // connection state changed
-                }
-                if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)){
-                    //wifi state changed
-                }
-            }else{
-                //wifi p2p is not enabled
+            } else {
+                // Wi-Fi P2P is not enabled
+                Toast.makeText(activity, "Please enable the wifi", Toast.LENGTH_SHORT).show();
             }
+        } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+            // Call WifiP2pManager.requestPeers() to get a list of current peers
+        } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+            // Respond to new connection or disconnections
+        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+            // Respond to this device's wifi state changing
         }
-
     }
 }

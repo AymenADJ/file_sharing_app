@@ -48,20 +48,20 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
                public void onClick(View view) {
                    WifiP2pConfig config = new WifiP2pConfig();
                    config.deviceAddress = device.getAddress();
-                   if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                       return;
-                   }
-                   context.manager.connect(context.channel, config, new WifiP2pManager.ActionListener() {
-                       @Override
-                       public void onSuccess() {
-                           Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
-                       }
+                   if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                       context.manager.connect(context.channel, config, new WifiP2pManager.ActionListener() {
+                           @Override
+                           public void onSuccess() {
+                               Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
+                               // start sending data to this device
+                           }
 
-                       @Override
-                       public void onFailure(int i) {
-                           Toast.makeText(context, "connection failed", Toast.LENGTH_SHORT).show();
-                       }
-                   });
+                           @Override
+                           public void onFailure(int i) {
+                               Toast.makeText(context, "connection failed", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+                   }
                }
            });
        }
