@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("path", path);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, "Rani ghalet f kach 7aja", Toast.LENGTH_SHORT).show();
                     requestPermissions();
                 }
             }
@@ -60,43 +59,54 @@ public class MainActivity extends AppCompatActivity {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (result != PackageManager.PERMISSION_GRANTED) return false;
         result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (result != PackageManager.PERMISSION_GRANTED) return false;
-        result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (result != PackageManager.PERMISSION_GRANTED) return false;
+        if (result != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Fine location problem", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (result != PackageManager.PERMISSION_GRANTED) return false;
+        if (result != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "coarse location problem", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_WIFI_STATE);
-        if (result != PackageManager.PERMISSION_GRANTED) return false;
+        if (result != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "access wifi problem", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CHANGE_WIFI_STATE);
-        if (result != PackageManager.PERMISSION_GRANTED) return false;
+        if (result != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "change wifi problem", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
     private void requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Toast.makeText(MainActivity.this, "You should granted this permission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You should grant this permission", Toast.LENGTH_SHORT).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 111);
         }
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Toast.makeText(MainActivity.this, "You should granted this permission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You should grant this permission", Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(this, "fine location request", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 112);
         }
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            Toast.makeText(MainActivity.this, "You should granted this permission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You should grant this permission", Toast.LENGTH_SHORT).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 113);
         }
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_WIFI_STATE)) {
-            Toast.makeText(MainActivity.this, "You should granted this permission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You should grant this permission", Toast.LENGTH_SHORT).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_WIFI_STATE}, 114);
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CHANGE_WIFI_STATE)) {
-                Toast.makeText(MainActivity.this, "You should granted this permission", Toast.LENGTH_SHORT).show();
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CHANGE_WIFI_STATE}, 115);
-            }
+        }
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CHANGE_WIFI_STATE)) {
+            Toast.makeText(MainActivity.this, "You should grant this permission", Toast.LENGTH_SHORT).show();
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CHANGE_WIFI_STATE}, 115);
         }
     }
 

@@ -1,9 +1,9 @@
 package com.example.expressSharingApp.activities.repository;
 
-public class WifiP2pDevice {
+public class WifiDirectDevice {
     private String name;
     private String address;
-    public WifiP2pDevice(String name , String address){
+    public WifiDirectDevice(String name , String address){
         this.name = name ;
         this.address = address;
     }

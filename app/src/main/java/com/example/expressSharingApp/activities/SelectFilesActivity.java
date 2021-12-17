@@ -65,9 +65,8 @@ public class SelectFilesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!selectedFiles.isEmpty()) {
-                    Toast.makeText(SelectFilesActivity.this, selectedFiles.toString(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectFilesActivity.this,DiscoveryPeersActivity.class);
-                    intent.putExtra("filesList",selectedFiles.toArray(new String[0]));
+//                    intent.putExtra("filesList",selectedFiles.toArray(new String[0]));
                     startActivity(intent);
                 }
             }

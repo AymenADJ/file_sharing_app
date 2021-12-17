@@ -17,15 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.activities.DiscoveryPeersActivity;
-import com.example.expressSharingApp.activities.repository.WifiP2pDevice;
+import com.example.expressSharingApp.activities.repository.WifiDirectDevice;
 
 import java.util.ArrayList;
 
 public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHolder> {
     DiscoveryPeersActivity context;
-    ArrayList<WifiP2pDevice> devices;
+    ArrayList<WifiDirectDevice> devices;
 
-    public PeersAdapter(Context context, ArrayList<WifiP2pDevice> wifiP2pDevices) {
+    public PeersAdapter(Context context, ArrayList<WifiDirectDevice> wifiP2pDevices) {
         this.devices = wifiP2pDevices;
         this.context = (DiscoveryPeersActivity) context;
     }
@@ -39,35 +39,37 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PeersViewHolder holder, int position) {
-        WifiP2pDevice device = devices.get(position);
-        holder.name.setText(device.getName());
-        holder.address.setText(device.getAddress());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = device.getAddress();
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                context.manager.connect(context.channel, config, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
-                    }
+       if(!devices.isEmpty()){
+           WifiDirectDevice device = devices.get(position);
+           holder.name.setText(device.getName());
+           holder.address.setText(device.getAddress());
+           holder.itemView.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   WifiP2pConfig config = new WifiP2pConfig();
+                   config.deviceAddress = device.getAddress();
+                   if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                       return;
+                   }
+                   context.manager.connect(context.channel, config, new WifiP2pManager.ActionListener() {
+                       @Override
+                       public void onSuccess() {
+                           Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
+                       }
 
-                    @Override
-                    public void onFailure(int i) {
-                        Toast.makeText(context, "connection failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-         }
-     });
+                       @Override
+                       public void onFailure(int i) {
+                           Toast.makeText(context, "connection failed", Toast.LENGTH_SHORT).show();
+                       }
+                   });
+               }
+           });
+       }
     }
 
     @Override
     public int getItemCount() {
-        return devices.size();
+        return devices.isEmpty()?0:devices.size();
     }
 
     public class PeersViewHolder extends RecyclerView.ViewHolder{
