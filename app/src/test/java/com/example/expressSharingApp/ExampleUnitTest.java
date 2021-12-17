@@ -1,4 +1,4 @@
-package com.example.filesharingapp;
+package com.example.expressSharingApp;
 
 import org.junit.Test;
 

@@ -1,18 +1,17 @@
-package com.example.filesharingapp.activities;
+package com.example.expressSharingApp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.filesharingapp.R;
-import com.example.filesharingapp.activities.adapters.MyAdapter;
+import com.example.expressSharingApp.R;
+import com.example.expressSharingApp.activities.adapters.FilesAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -20,7 +19,9 @@ import java.util.ArrayList;
 
 public class SelectFilesActivity extends AppCompatActivity {
     FloatingActionButton fab;
-    TextView numSelected ;
+    TextView numSelected;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +42,10 @@ public class SelectFilesActivity extends AppCompatActivity {
         fileRecyclerView.setVisibility(View.VISIBLE);
 
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MyAdapter manager = new MyAdapter(getApplicationContext(), files);
+        FilesAdapter manager = new FilesAdapter(getApplicationContext(), files);
         fileRecyclerView.setAdapter(manager);
-        numSelected =(TextView) findViewById(R.id.num_selected);
-        numSelected.setText(manager.getNumSeletedFiles()+" files");
+        numSelected = (TextView) findViewById(R.id.num_selected);
+        numSelected.setText(manager.getNumSeletedFiles() + " files");
 
         fab = (FloatingActionButton) findViewById(R.id.fab_send);
         fabConfig(manager.getSelectedFiles());
@@ -53,19 +54,23 @@ public class SelectFilesActivity extends AppCompatActivity {
         fileRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                numSelected =(TextView) findViewById(R.id.num_selected);
-                numSelected.setText(manager.getNumSeletedFiles()+" files");
+                numSelected = (TextView) findViewById(R.id.num_selected);
+                numSelected.setText(manager.getNumSeletedFiles() + " files");
             }
         });
     }
 
     private void fabConfig(ArrayList<File> selectedFiles) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!selectedFiles.isEmpty()){
-                    Toast.makeText(SelectFilesActivity.this, selectedFiles.toString(), Toast.LENGTH_SHORT).show();}
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!selectedFiles.isEmpty()) {
+                    Intent intent = new Intent(SelectFilesActivity.this,DiscoveryPeersActivity.class);
+//                    intent.putExtra("filesList",selectedFiles.toArray(new String[0]));
+                    startActivity(intent);
                 }
-            });
+            }
+        });
     }
+
 }

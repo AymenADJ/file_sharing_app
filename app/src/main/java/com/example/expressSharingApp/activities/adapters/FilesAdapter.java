@@ -1,39 +1,30 @@
-package com.example.filesharingapp.activities.adapters;
+package com.example.expressSharingApp.activities.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.filesharingapp.R;
-import com.example.filesharingapp.activities.SelectFilesActivity;
-
-import org.w3c.dom.Text;
+import com.example.expressSharingApp.R;
+import com.example.expressSharingApp.activities.SelectFilesActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FilesViewHolder> {
     Context context;
     File[] filesAndFolders;
     ArrayList<File> selectedFiles = new ArrayList<File>();
 
-    public MyAdapter(Context context, File[] filesAndFolders) {
+    public FilesAdapter(Context context, File[] filesAndFolders) {
         this.context = context;
         this.filesAndFolders = filesAndFolders;
     }
@@ -45,13 +36,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
     @NonNull
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.one_item_list, parent, false);
-        return new ViewHolder(view);
+    public FilesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.one_file, parent, false);
+        return new FilesViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FilesViewHolder holder, int position) {
         File selectedFile = filesAndFolders[position];
         holder.fileName.setText(selectedFile.getName());
         holder.filePath.setText(selectedFile.getAbsolutePath());
@@ -125,11 +116,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return filesAndFolders.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class FilesViewHolder extends RecyclerView.ViewHolder {
         TextView fileName;
         TextView filePath;
         ImageView imageView;
-        public ViewHolder(View itemView) {
+        public FilesViewHolder(View itemView) {
             super(itemView);
             fileName = itemView.findViewById(R.id.folder_name);
             filePath = itemView.findViewById(R.id.file_path);
