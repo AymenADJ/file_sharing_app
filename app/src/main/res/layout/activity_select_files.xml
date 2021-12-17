@@ -14,18 +14,18 @@
            android:id="@+id/top_bar"
            android:background="@color/blue"
            >
+
            <TextView
-               android:textColor="@color/white"
                android:id="@+id/select_file_titre"
-               android:layout_alignParentStart="true"
-               android:layout_alignParentTop="true"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:textSize="24dp"
-               android:text="SELECT FILES"
+               android:layout_alignParentStart="true"
+               android:layout_alignParentTop="true"
                android:padding="20dp"
-               android:textStyle="bold"
-               />
+               android:text="SELECT FILES"
+               android:textColor="@color/white"
+               android:textSize="24dp"
+               android:textStyle="bold" />
 
            <TextView
                android:id="@+id/num_selected"
