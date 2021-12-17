@@ -115,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // receive files
+                if (checkPermission()) {
+                    Intent intent = new Intent(MainActivity.this, ReceiveActivity.class);
+                    String path = Environment.getExternalStorageDirectory().toString();
+                    startActivity(intent);
+                } else {
+                    requestPermissions();
+                }
             }
         });
     }
