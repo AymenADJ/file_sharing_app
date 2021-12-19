@@ -107,20 +107,21 @@ public class SendingFilesActivity extends AppCompatActivity {
     public void sendingFiles(ArrayList<String> files) {
         //elements
         ConstraintLayout dialog = new ConstraintLayout(this);
-        View view = LayoutInflater.from(dialog.getContext()).inflate(R.layout.sending_files_progression ,dialog , false);
+        View view = LayoutInflater.from(dialog.getContext()).inflate(R.layout.sending_files_progression, dialog, false);
         dialog.addView(view);
         Button done = view.findViewById(R.id.done_btn);
         Button cancel = view.findViewById(R.id.cancel_button);
         ProgressBar progressBar = view.findViewById(R.id.progress_horizontal);
         TextView percentage = view.findViewById(R.id.percentage);
+        TextView currentFile = view.findViewById(R.id.current_file);
         cancelBtnConfig(cancel);
+        doneBtnConfig(done);
 
         //show an alert message that contains the progress bar
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SendingFilesActivity.this);
-        doneBtnConfig(done , alertDialog);
         alertDialog.setCancelable(false);
         alertDialog.setView(dialog);
-        changeElements(done , cancel , progressBar, percentage,100);
+        changeElements(done, cancel, progressBar, percentage , currentFile, 0 , files);
         alertDialog.show();
 
         //sending files code here ...
@@ -130,7 +131,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         //.. how to send files ? the methode to use ?
     }
 
-    private void doneBtnConfig(Button done , AlertDialog.Builder dialog) {
+    private void doneBtnConfig(Button done) {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,7 +153,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         });
     }
 
-    private void changeElements(Button done , Button cancel , ProgressBar progressBar , TextView percentage,int progress) {
+    private void changeElements(Button done, Button cancel, ProgressBar progressBar, TextView percentage,TextView currentFile, int progress , ArrayList<String> files) {
         percentage.setText(progress + "%");
         progressBar.setProgress(progress);
         if (progressBar.getProgress() == 100) {
@@ -162,5 +163,11 @@ public class SendingFilesActivity extends AppCompatActivity {
             done.setVisibility(View.GONE);
             cancel.setVisibility(View.VISIBLE);
         }
+        if(files.isEmpty()){
+            currentFile.setText("");
+        }else{
+            currentFile.setText(files.get(0));
+        }
+        Toast.makeText(this, files.toString(), Toast.LENGTH_SHORT).show();
     }
 }

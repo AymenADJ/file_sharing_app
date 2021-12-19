@@ -42,6 +42,16 @@
         app:layout_constraintTop_toBottomOf="@+id/percentage"
         android:id="@+id/progress_horizontal"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_file"
+        app:layout_constraintTop_toBottomOf="@id/progress_horizontal"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        android:maxLines="2"
+        app:layout_constraintStart_toStartOf="parent"
+        />
     <Button
         android:id="@+id/cancel_button"
         android:textColor="@color/grey"
@@ -52,7 +62,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/current_file"
         />
     <Button
         android:visibility="gone"
