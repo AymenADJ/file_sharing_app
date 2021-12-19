@@ -5,9 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dialog"
     android:background="@color/white"
-    android:layout_margin="40dp"
-    android:padding="20dp"
     android:layout_gravity="center"
+    android:padding="10dp"
     >
     <TextView
         android:layout_width="match_parent"
@@ -59,7 +58,7 @@
         android:visibility="gone"
         android:id="@+id/done_btn"
         android:textColor="@color/blue"
-        android:text="cancel"
+        android:text="done"
         style="?attr/borderlessButtonStyle"
         android:layout_marginTop="20dp"
         android:layout_width="80dp"
