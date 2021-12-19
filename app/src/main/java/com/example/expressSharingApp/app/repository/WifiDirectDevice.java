@@ -1,4 +1,4 @@
-package com.example.expressSharingApp.activities.repository;
+package com.example.expressSharingApp.app.repository;
 
 public class WifiDirectDevice {
     private String name;

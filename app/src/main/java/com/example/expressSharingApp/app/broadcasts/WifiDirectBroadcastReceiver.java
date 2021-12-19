@@ -1,4 +1,4 @@
-package com.example.expressSharingApp.activities;
+package com.example.expressSharingApp.app.broadcasts;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -16,21 +16,18 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 
 import com.example.expressSharingApp.R;
-import com.example.expressSharingApp.activities.repository.WifiDirectDevice;
-
-import org.w3c.dom.Text;
+import com.example.expressSharingApp.app.activities.SendingFilesActivity;
+import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
-    DiscoveryPeersActivity activity;
+    SendingFilesActivity activity;
     WifiP2pManager manager;
     WifiP2pManager.Channel channel;
-    WifiManager wifi;
 
-    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, DiscoveryPeersActivity discoveryPeersActivity) {
-        this.activity = discoveryPeersActivity;
+    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, SendingFilesActivity sendingFilesActivity) {
+        this.activity = sendingFilesActivity;
         this.manager = manager;
         this.channel = channel;
-        this.wifi = wifi;
     }
 
     @Override

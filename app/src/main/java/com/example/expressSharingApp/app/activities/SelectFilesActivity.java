@@ -1,4 +1,4 @@
-package com.example.expressSharingApp.activities;
+package com.example.expressSharingApp.app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,10 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.expressSharingApp.R;
-import com.example.expressSharingApp.activities.adapters.FilesAdapter;
+import com.example.expressSharingApp.app.adapters.FilesAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -30,6 +29,7 @@ public class SelectFilesActivity extends AppCompatActivity {
 
         RecyclerView fileRecyclerView = (RecyclerView) findViewById(R.id.all_files_recycleview);
         TextView noFilesMssg = (TextView) findViewById(R.id.no_files_mssg);
+
         String path = getIntent().getStringExtra("path");
         File root = new File(path);
         File[] files = root.listFiles();
@@ -38,12 +38,13 @@ public class SelectFilesActivity extends AppCompatActivity {
             noFilesMssg.setVisibility(View.VISIBLE);
             return;
         }
+
         noFilesMssg.setVisibility(View.GONE);
         fileRecyclerView.setVisibility(View.VISIBLE);
-
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         FilesAdapter manager = new FilesAdapter(getApplicationContext(), files);
         fileRecyclerView.setAdapter(manager);
+
         numSelected = (TextView) findViewById(R.id.num_selected);
         numSelected.setText(manager.getNumSeletedFiles() + " files");
 
@@ -65,12 +66,22 @@ public class SelectFilesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!selectedFiles.isEmpty()) {
-                    Intent intent = new Intent(SelectFilesActivity.this,DiscoveryPeersActivity.class);
-//                    intent.putExtra("filesList",selectedFiles.toArray(new String[0]));
+                    Intent intent = new Intent(SelectFilesActivity.this, SendingFilesActivity.class);
+                    Bundle b = new Bundle();
+                    b.putStringArrayList("paths" ,fileToPath(selectedFiles));
+                    intent.putExtra("files" , b);
                     startActivity(intent);
                 }
             }
         });
+    }
+
+    private ArrayList<String >fileToPath(ArrayList<File> files){
+        ArrayList<String> paths = new ArrayList<String>();
+        for (File file: files) {
+            paths.add(file.getAbsolutePath());
+        }
+        return paths;
     }
 
 }

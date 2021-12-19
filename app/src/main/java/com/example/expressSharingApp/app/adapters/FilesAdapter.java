@@ -1,4 +1,4 @@
-package com.example.expressSharingApp.activities.adapters;
+package com.example.expressSharingApp.app.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expressSharingApp.R;
-import com.example.expressSharingApp.activities.SelectFilesActivity;
+import com.example.expressSharingApp.app.activities.SelectFilesActivity;
 
 import java.io.File;
 import java.util.ArrayList;
