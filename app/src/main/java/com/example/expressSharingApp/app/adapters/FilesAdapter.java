@@ -88,7 +88,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FilesViewHol
     private void openFile(File selectedFile) {
       if(selectedFile.exists()){
           try {
-              Uri uri = Uri.parse("file://"+selectedFile.getAbsolutePath());
+              Uri uri = Uri.parse("content://"+selectedFile.getAbsolutePath());
 //              Toast.makeText(context, selectedFile.getParent(), Toast.LENGTH_SHORT).show();
               Intent intent = new Intent(Intent.ACTION_VIEW);
               intent.setDataAndType(uri,"image/*");

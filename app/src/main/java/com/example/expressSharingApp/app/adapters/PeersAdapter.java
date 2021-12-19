@@ -53,7 +53,6 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
         if (!devices.isEmpty()) {
             WifiDirectDevice device = devices.get(position);
             holder.name.setText(device.getName());
-            holder.address.setText(device.getAddress());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.Q)
                 @Override
@@ -86,12 +85,11 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
     }
 
     public class PeersViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, address;
+        public TextView name;
 
         public PeersViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.peer_name);
-            address = itemView.findViewById(R.id.peer_address);
         }
     }
 }

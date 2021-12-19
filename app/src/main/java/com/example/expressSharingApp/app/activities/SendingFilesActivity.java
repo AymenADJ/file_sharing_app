@@ -62,7 +62,6 @@ public class SendingFilesActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.list_peers_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         Bundle bundle = getIntent().getBundleExtra("files");
         adapter = new PeersAdapter(this, devices, (ArrayList<String>) bundle.get("paths"));
         recyclerView.setAdapter(adapter);
