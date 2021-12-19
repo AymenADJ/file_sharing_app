@@ -64,4 +64,5 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/test_dialog"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

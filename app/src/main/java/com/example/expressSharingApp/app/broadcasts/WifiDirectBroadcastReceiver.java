@@ -9,10 +9,12 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.example.expressSharingApp.R;
@@ -39,7 +41,19 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi P2P is enabled
                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    manager.discoverPeers(this.channel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(activity, "Discovery succeeded", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int i) {
+                            Toast.makeText(activity, "Discovery failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     manager.requestPeers(this.channel, new WifiP2pManager.PeerListListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.Q)
                         @Override
                         public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
                             activity.devices.clear();

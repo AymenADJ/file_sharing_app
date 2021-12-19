@@ -1,21 +1,26 @@
 package com.example.expressSharingApp.app.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Constraints;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -36,6 +41,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.util.ArrayList;
 
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class SendingFilesActivity extends AppCompatActivity {
     public PeersAdapter adapter;
     public WifiP2pManager.Channel channel;
@@ -72,6 +78,9 @@ public class SendingFilesActivity extends AppCompatActivity {
 
         refresh = (ImageButton) findViewById(R.id.refresh_discovery);
         refreshBtnConfig(refresh);
+
+
+        registerReceiver(receiver, intentFilter);
 
         test_dialog = (Button) findViewById(R.id.test_dialog);
         test_dialog.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +130,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SendingFilesActivity.this);
         alertDialog.setCancelable(false);
         alertDialog.setView(dialog);
-        changeElements(done, cancel, progressBar, percentage , currentFile, 0 , files);
+        changeElements(done, cancel, progressBar, percentage, currentFile, 0, files);
         alertDialog.show();
 
         //sending files code here ...
@@ -153,7 +162,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         });
     }
 
-    private void changeElements(Button done, Button cancel, ProgressBar progressBar, TextView percentage,TextView currentFile, int progress , ArrayList<String> files) {
+    private void changeElements(Button done, Button cancel, ProgressBar progressBar, TextView percentage, TextView currentFile, int progress, ArrayList<String> files) {
         percentage.setText(progress + "%");
         progressBar.setProgress(progress);
         if (progressBar.getProgress() == 100) {
@@ -163,11 +172,10 @@ public class SendingFilesActivity extends AppCompatActivity {
             done.setVisibility(View.GONE);
             cancel.setVisibility(View.VISIBLE);
         }
-        if(files.isEmpty()){
+        if (files.isEmpty()) {
             currentFile.setText("");
-        }else{
+        } else {
             currentFile.setText(files.get(0));
         }
-        Toast.makeText(this, files.toString(), Toast.LENGTH_SHORT).show();
     }
 }
