@@ -49,11 +49,10 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
                         @Override
                         public void onFailure(int i) {
-                            Toast.makeText(activity, "Discovery failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Discovery failed : Please enable location", Toast.LENGTH_SHORT).show();
                         }
                     });
                     manager.requestPeers(this.channel, new WifiP2pManager.PeerListListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.Q)
                         @Override
                         public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
                             activity.devices.clear();

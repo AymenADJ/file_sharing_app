@@ -1,28 +1,16 @@
 package com.example.expressSharingApp.app.activities;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Constraints;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,24 +22,29 @@ import android.widget.Toast;
 import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.app.broadcasts.WifiDirectBroadcastReceiver;
 import com.example.expressSharingApp.app.adapters.PeersAdapter;
+import com.example.expressSharingApp.app.repository.FileServerAsyncTask;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
 import java.util.ArrayList;
 
-@RequiresApi(api = Build.VERSION_CODES.Q)
 public class SendingFilesActivity extends AppCompatActivity {
     public PeersAdapter adapter;
     public WifiP2pManager.Channel channel;
     public WifiP2pManager manager;
     IntentFilter intentFilter;
     BroadcastReceiver receiver;
+    int port = 9999; // 9999 = sender | 5000 = receiver (my notation)
+    String host = "Sender";
     public ArrayList<WifiDirectDevice> devices = new ArrayList<>();
+    public ArrayList<String> files = new ArrayList<>();
     ImageButton refresh;
 
-    Button test_dialog;
+    ConstraintLayout dialog;
+    public Button done;
+    public Button cancel;
+    public ProgressBar progressBar;
+    public TextView percentage;
+    public TextView currentFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +56,8 @@ public class SendingFilesActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         Bundle bundle = getIntent().getBundleExtra("files");
-        adapter = new PeersAdapter(this, devices, (ArrayList<String>) bundle.get("paths"));
+        files.addAll((ArrayList<String>) bundle.get("paths"));
+        adapter = new PeersAdapter(this, devices, files);
         recyclerView.setAdapter(adapter);
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -78,16 +72,19 @@ public class SendingFilesActivity extends AppCompatActivity {
         refresh = (ImageButton) findViewById(R.id.refresh_discovery);
         refreshBtnConfig(refresh);
 
-
         registerReceiver(receiver, intentFilter);
 
-        test_dialog = (Button) findViewById(R.id.test_dialog);
-        test_dialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendingFiles((ArrayList<String>) bundle.get("paths"));
-            }
-        });
+        dialog = new ConstraintLayout(this);
+        View view = LayoutInflater.from(dialog.getContext()).inflate(R.layout.sending_files_progression, dialog, false);
+        dialog.addView(view);
+        done = view.findViewById(R.id.done_btn);
+        cancel = view.findViewById(R.id.cancel_button);
+        progressBar = view.findViewById(R.id.progress_horizontal);
+        percentage = view.findViewById(R.id.percentage);
+        currentFile = view.findViewById(R.id.current_file);
+        cancelBtnConfig(cancel);
+        doneBtnConfig(done);
+
     }
 
     @Override
@@ -113,30 +110,18 @@ public class SendingFilesActivity extends AppCompatActivity {
 
     // Sending files
     public void sendingFiles(ArrayList<String> files) {
-        //elements
-        ConstraintLayout dialog = new ConstraintLayout(this);
-        View view = LayoutInflater.from(dialog.getContext()).inflate(R.layout.sending_files_progression, dialog, false);
-        dialog.addView(view);
-        Button done = view.findViewById(R.id.done_btn);
-        Button cancel = view.findViewById(R.id.cancel_button);
-        ProgressBar progressBar = view.findViewById(R.id.progress_horizontal);
-        TextView percentage = view.findViewById(R.id.percentage);
-        TextView currentFile = view.findViewById(R.id.current_file);
-        cancelBtnConfig(cancel);
-        doneBtnConfig(done);
 
         //show an alert message that contains the progress bar
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SendingFilesActivity.this);
         alertDialog.setCancelable(false);
         alertDialog.setView(dialog);
-        changeElements(done, cancel, progressBar, percentage, currentFile, 0, files);
+        changeElements(0, files.get(0));
         alertDialog.show();
 
-        //sending files code here ...
-        //..
-        //.. changing elements while sending files
-        //.. stream files
-        //.. how to send files ? the methode to use ?
+        //sending files
+        FileServerAsyncTask task = new FileServerAsyncTask(this, port, host);
+        task.execute();
+        Toast.makeText(this, "End sending files", Toast.LENGTH_SHORT).show();
     }
 
     private void doneBtnConfig(Button done) {
@@ -161,7 +146,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         });
     }
 
-    private void changeElements(Button done, Button cancel, ProgressBar progressBar, TextView percentage, TextView currentFile, int progress, ArrayList<String> files) {
+    public void changeElements(int progress, String filePath) {
         percentage.setText(progress + "%");
         progressBar.setProgress(progress);
         if (progressBar.getProgress() == 100) {
@@ -171,10 +156,7 @@ public class SendingFilesActivity extends AppCompatActivity {
             done.setVisibility(View.GONE);
             cancel.setVisibility(View.VISIBLE);
         }
-        if (files.isEmpty()) {
-            currentFile.setText("");
-        } else {
-            currentFile.setText(files.get(0));
-        }
+        currentFile.setText(filePath);
     }
+
 }
