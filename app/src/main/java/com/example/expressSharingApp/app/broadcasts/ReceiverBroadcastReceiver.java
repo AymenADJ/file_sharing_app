@@ -13,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,22 +21,25 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.app.activities.ReceiveActivity;
+import com.example.expressSharingApp.app.activities.SendingFilesActivity;
 import com.example.expressSharingApp.app.repository.FileServerAsyncTask;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
-public class WifiServerBroadcastReceiver extends BroadcastReceiver {
+public class ReceiverBroadcastReceiver extends BroadcastReceiver {
     WifiP2pManager manager;
     WifiP2pManager.Channel channel;
     ReceiveActivity activity;
     int port;
     String host;
 
-    public WifiServerBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReceiveActivity activity, int port, String host) {
+
+    public ReceiverBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReceiveActivity activity, int port, String host) {
         this.activity = activity;
         this.channel = channel;
         this.manager = manager;
         this.port = port;
         this.host = host;
+
     }
 
     @Override
@@ -46,24 +50,31 @@ public class WifiServerBroadcastReceiver extends BroadcastReceiver {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi P2P is enabled
+                // then discover peers
+
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    manager.discoverPeers(this.channel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(activity, "Discovery succeeded", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int i) {
+                            Toast.makeText(activity, "Discovery failed : Please enable location", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }else{
+                    Toast.makeText(activity, "Please grant the location permission", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 // Wi-Fi P2P is not enabled
                 Toast.makeText(activity, "Please enable the wifi", Toast.LENGTH_SHORT).show();
-                TextView mssg = activity.findViewById(R.id.no_device_mssg);
-                mssg.setVisibility(View.VISIBLE);
-                mssg.setText("Enable the wifi");
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            // Call WifiP2pManager.requestPeers() to get a list of current peers
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-            // Respond to new connection or disconnections
-            NetworkInfo networkInfo = (NetworkInfo) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            if (networkInfo.isConnected()) {
-                    Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
-                }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            // Respond to this device's wifi state changing
         }
     }
 }

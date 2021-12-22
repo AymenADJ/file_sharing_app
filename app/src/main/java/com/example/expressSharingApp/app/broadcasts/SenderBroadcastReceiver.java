@@ -21,12 +21,12 @@ import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.app.activities.SendingFilesActivity;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
-public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
+public class SenderBroadcastReceiver extends BroadcastReceiver {
     SendingFilesActivity activity;
     WifiP2pManager manager;
     WifiP2pManager.Channel channel;
 
-    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, SendingFilesActivity sendingFilesActivity) {
+    public SenderBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, SendingFilesActivity sendingFilesActivity) {
         this.activity = sendingFilesActivity;
         this.manager = manager;
         this.channel = channel;
@@ -40,6 +40,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi P2P is enabled
+                // then discover peers
                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     manager.discoverPeers(this.channel, new WifiP2pManager.ActionListener() {
                         @Override
@@ -52,6 +53,22 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                             Toast.makeText(activity, "Discovery failed : Please enable location", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                }else{
+                    Toast.makeText(activity, "Please grant the location permission", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Wi-Fi P2P is not enabled
+                Toast.makeText(activity, "Please enable the wifi", Toast.LENGTH_SHORT).show();
+                TextView mssg = activity.findViewById(R.id.no_device_mssg);
+                mssg.setVisibility(View.VISIBLE);
+                mssg.setText("Enable the wifi");
+                WifiManager wifiManager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifiManager.setWifiEnabled(true);
+            }
+        } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+            // Call WifiP2pManager.requestPeers() to get a list of current peers
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     manager.requestPeers(this.channel, new WifiP2pManager.PeerListListener() {
                         @Override
                         public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
@@ -59,7 +76,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                             for (WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()) {
                                 activity.devices.add(new WifiDirectDevice(device.deviceName, device.deviceAddress));
                             }
-                            if (wifiP2pDeviceList.getDeviceList().size() == 0) {
+                            if (activity.devices.size() == 0) {
                                 Toast.makeText(activity, "No device found", Toast.LENGTH_SHORT).show();
                                 TextView mssg = activity.findViewById(R.id.no_device_mssg);
                                 mssg.setVisibility(View.VISIBLE);
@@ -71,15 +88,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                         }
                     });
                 }
-            } else {
-                // Wi-Fi P2P is not enabled
-                Toast.makeText(activity, "Please enable the wifi", Toast.LENGTH_SHORT).show();
-                TextView mssg = activity.findViewById(R.id.no_device_mssg);
-                mssg.setVisibility(View.VISIBLE);
-                mssg.setText("Enable the wifi");
-            }
-        } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            // Call WifiP2pManager.requestPeers() to get a list of current peers
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

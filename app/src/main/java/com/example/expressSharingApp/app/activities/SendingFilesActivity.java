@@ -20,9 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.expressSharingApp.R;
-import com.example.expressSharingApp.app.broadcasts.WifiDirectBroadcastReceiver;
+import com.example.expressSharingApp.app.broadcasts.SenderBroadcastReceiver;
 import com.example.expressSharingApp.app.adapters.PeersAdapter;
 import com.example.expressSharingApp.app.repository.FileServerAsyncTask;
+import com.example.expressSharingApp.app.repository.Utilities;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class SendingFilesActivity extends AppCompatActivity {
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
-        receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
+        receiver = new SenderBroadcastReceiver(manager, channel, this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -71,6 +72,11 @@ public class SendingFilesActivity extends AppCompatActivity {
 
         refresh = (ImageButton) findViewById(R.id.refresh_discovery);
         refreshBtnConfig(refresh);
+
+        Utilities utility = new Utilities();
+        utility.openWifi(this);
+        utility.requestLocationPermission(this);
+        utility.openLocation(this);
 
         registerReceiver(receiver, intentFilter);
 
@@ -85,6 +91,7 @@ public class SendingFilesActivity extends AppCompatActivity {
         cancelBtnConfig(cancel);
         doneBtnConfig(done);
 
+
     }
 
     @Override
@@ -98,6 +105,8 @@ public class SendingFilesActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(receiver);
     }
+
+
 
     private void refreshBtnConfig(ImageButton refresh) {
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +130,6 @@ public class SendingFilesActivity extends AppCompatActivity {
         //sending files
         FileServerAsyncTask task = new FileServerAsyncTask(this, port, host);
         task.execute();
-        Toast.makeText(this, "End sending files", Toast.LENGTH_SHORT).show();
     }
 
     private void doneBtnConfig(Button done) {
@@ -158,5 +166,4 @@ public class SendingFilesActivity extends AppCompatActivity {
         }
         currentFile.setText(filePath);
     }
-
 }

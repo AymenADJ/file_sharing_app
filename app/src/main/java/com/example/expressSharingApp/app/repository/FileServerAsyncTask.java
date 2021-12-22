@@ -60,6 +60,7 @@ public class FileServerAsyncTask extends AsyncTask {
             InputStream inputstream = client.getInputStream();
             copyFile(inputstream, new FileOutputStream(f));
             serverSocket.close();
+            Toast.makeText(context, "End sending files", Toast.LENGTH_SHORT).show();
             return f.getAbsolutePath();
         } catch (IOException e) {
             return null;
