@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expressSharingApp.R;
-import com.example.expressSharingApp.app.activities.SelectFilesActivity;
+import com.example.expressSharingApp.app.activities.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FilesViewHol
     private void openFile(File selectedFile) {
       if(selectedFile.exists()){
           try {
-              Uri uri = Uri.parse("content://"+selectedFile.getAbsolutePath());
+              Uri uri = Uri.parse("file://"+selectedFile.getAbsolutePath());
 //              Toast.makeText(context, selectedFile.getParent(), Toast.LENGTH_SHORT).show();
               Intent intent = new Intent(Intent.ACTION_VIEW);
               intent.setDataAndType(uri,"image/*");
@@ -104,7 +104,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FilesViewHol
     }
 
     private void openFolder(File selectedFile) {
-        Intent intent = new Intent(context, SelectFilesActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         String path = selectedFile.getAbsolutePath();
         intent.putExtra("path", path);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

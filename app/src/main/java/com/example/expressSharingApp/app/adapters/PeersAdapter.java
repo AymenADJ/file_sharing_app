@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -64,8 +65,6 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
                             @Override
                             public void onSuccess() {
                                 Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
-                                // start sending data to this device
-                                context.sendingFiles(files);
                             }
 
                             @Override

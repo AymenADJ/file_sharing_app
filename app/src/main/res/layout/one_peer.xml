@@ -5,18 +5,21 @@
     android:paddingVertical="20dp"
     android:paddingHorizontal="10dp"
     android:clickable="true"
+    android:isScrollContainer="false"
     >
+
     <TextView
+        android:id="@+id/peer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="NAME"
-        android:id="@+id/peer_name"
-        android:textSize="20sp"
-        />
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_baseline_wifi_24"
-        />
+        android:src="@drawable/ic_baseline_wifi_24" />
 </RelativeLayout>

@@ -41,7 +41,7 @@
         android:id="@+id/list_peers_recyclerview"
         app:layout_constraintTop_toBottomOf="@id/discover_app_bar"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
         />
     <TextView
         android:layout_width="wrap_content"
