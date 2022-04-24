@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -44,7 +46,9 @@ public class ReceiveActivity extends AppCompatActivity {
         utility.requestLocationPermission(this);
         utility.openLocation(this);
         registerReceiver(receiver, intentFilter);
+
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -56,5 +60,4 @@ public class ReceiveActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(receiver);
     }
-
 }

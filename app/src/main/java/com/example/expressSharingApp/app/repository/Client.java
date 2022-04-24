@@ -19,21 +19,17 @@ public class Client extends Thread{
     private InputStream ips;
     private HashMap<String , String> messages ;
     private Context context;
-    private InetAddress groupOwner ;
 
-    public Client (Context context , InetAddress groupOwner){
+    public Client (Context context){
         this.context = context;
-        this.groupOwner = groupOwner;
     }
     public void run (){
         try{
             socket = new Socket();
-            socket.connect(new InetSocketAddress(groupOwner.getHostAddress(), port));
             ips = socket.getInputStream();
             ObjectInputStream ois = new ObjectInputStream(ips);
             messages = (HashMap<String, String>) ois.readObject();
             Toast.makeText(context, messages.toString(), Toast.LENGTH_SHORT).show();
-            socket.close();
         }catch(IOException | ClassNotFoundException e){
             e.printStackTrace();
             Toast.makeText(context, "ERROR in receiving", Toast.LENGTH_SHORT).show();

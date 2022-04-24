@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
@@ -91,26 +92,8 @@ public class MyBroadcastReceiver extends android.content.BroadcastReceiver {
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-            manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
-                @Override
-                public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
-                    Toast.makeText(activity, wifiP2pInfo.toString(), Toast.LENGTH_SHORT).show();
-                    if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
-                        Toast.makeText(activity, "Server", Toast.LENGTH_SHORT).show();
-                        sendMessages("test" , "hello world");
-                    } else if (wifiP2pInfo.groupFormed) {
-                        Toast.makeText(activity, "Client-ERROR", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
         }
     }
 
-    private void sendMessages(String key , String value){
-        HashMap<String , String> messages = new HashMap<>();
-        messages.put(key , value);
-        Server server = new Server(messages);
-        server.start();
-    }
 }
