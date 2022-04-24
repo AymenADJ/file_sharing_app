@@ -18,27 +18,25 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.example.expressSharingApp.R;
+import com.example.expressSharingApp.app.activities.ReceiveActivity;
 import com.example.expressSharingApp.app.activities.SendingFilesActivity;
 import com.example.expressSharingApp.app.repository.Client;
-import com.example.expressSharingApp.app.repository.Server;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.InetAddress;
 
-public class MyBroadcastReceiver extends android.content.BroadcastReceiver {
+public class ReceiveBroadcastReceiver extends android.content.BroadcastReceiver{
     WifiP2pManager manager;
     WifiP2pManager.Channel channel;
-    SendingFilesActivity activity;
+    ReceiveActivity activity;
     int port;
 
-    public MyBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, SendingFilesActivity activity, int port  ) {
+    public ReceiveBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReceiveActivity activity, int port  ) {
         this.activity = activity;
         this.channel = channel;
         this.manager = manager;
         this.port = port;
     }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -50,30 +48,10 @@ public class MyBroadcastReceiver extends android.content.BroadcastReceiver {
                 // then discover peers
 
                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    activity.devices.clear();
                     manager.discoverPeers(this.channel, new WifiP2pManager.ActionListener() {
                         @Override
                         public void onSuccess() {
                             Toast.makeText(activity, "Discovery succeeded", Toast.LENGTH_SHORT).show();
-                            manager.requestPeers(channel, new WifiP2pManager.PeerListListener() {
-                                @RequiresApi(api = Build.VERSION_CODES.Q)
-                                @Override
-                                public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-                                    activity.devices.clear();
-                                    for (WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()) {
-                                        activity.devices.add(new WifiDirectDevice(device.deviceName, device.deviceAddress));
-                                    }
-                                    if (wifiP2pDeviceList.getDeviceList().size() == 0) {
-                                        Toast.makeText(activity, "No device found", Toast.LENGTH_SHORT).show();
-                                        TextView mssg = activity.findViewById(R.id.no_device_mssg);
-                                        mssg.setVisibility(View.VISIBLE);
-                                        mssg.setText("No device found");
-                                    } else {
-                                        activity.findViewById(R.id.no_device_mssg).setVisibility(View.GONE);
-                                    }
-                                    activity.adapter.notifyDataSetChanged();
-                                }
-                            });
                         }
 
                         @Override
@@ -96,21 +74,19 @@ public class MyBroadcastReceiver extends android.content.BroadcastReceiver {
                 public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
                     Toast.makeText(activity, wifiP2pInfo.toString(), Toast.LENGTH_SHORT).show();
                     if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
-                        Toast.makeText(activity, "Server", Toast.LENGTH_SHORT).show();
-                        sendMessages("test" , "hello world");
+                        Toast.makeText(activity, "Server-ERROR", Toast.LENGTH_SHORT).show();
                     } else if (wifiP2pInfo.groupFormed) {
-                        Toast.makeText(activity, "Client-ERROR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Client", Toast.LENGTH_SHORT).show();
+                        receiveMessages(activity , wifiP2pInfo.groupOwnerAddress);
                     }
                 }
             });
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
         }
-    }
 
-    private void sendMessages(String key , String value){
-        HashMap<String , String> messages = new HashMap<>();
-        messages.put(key , value);
-        Server server = new Server(messages);
-        server.start();
+    }
+    private void receiveMessages(Context context , InetAddress groupOwner){
+        Client client = new Client(context , groupOwner);
+        client.start();
     }
 }

@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen">
         <activity
+            android:name=".app.activities.ReceiveActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.activities.MainActivity"
             android:exported="false" />
         <activity

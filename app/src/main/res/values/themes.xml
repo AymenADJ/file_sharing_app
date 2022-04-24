@@ -20,6 +20,6 @@
     <style name="Theme.SplashScreen" parent="Theme.Design.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">@color/blue</item>
-        <item name="android:navigationBarColor">@color/blue</item>
+        <item name="android:navigationBarColor">@color/orange</item>
     </style>
 </resources>

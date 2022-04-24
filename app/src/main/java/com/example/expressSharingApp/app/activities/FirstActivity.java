@@ -21,16 +21,34 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-        Button btn = (Button) findViewById(R.id.start_btn);
-        btnConfig(btn , this);
+        Button send = (Button) findViewById(R.id.send_btn);
+        send.setHeight(getApplicationContext().getResources().getDisplayMetrics().heightPixels / 2);
+        sendBtnConfig(send , this);
+        Button receive = (Button) findViewById(R.id.receive_btn);
+        receive.setHeight(getApplicationContext().getResources().getDisplayMetrics().heightPixels / 2);
+        receiveBtnConfig(receive , this);
     }
-    private void btnConfig(Button btn , Context c){
+    private void sendBtnConfig(Button btn , Context c){
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkPermissions()){
                     Intent intent = new Intent(c , MainActivity.class);
                     intent.putExtra("path" , Environment.getExternalStorageDirectory().getAbsolutePath());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    c.startActivity(intent);
+                }else{
+                    requestPermissions();
+                }
+            }
+        });
+    }
+    private void receiveBtnConfig(Button btn , Context c){
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkPermissions()){
+                    Intent intent = new Intent(c , ReceiveActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     c.startActivity(intent);
                 }else{

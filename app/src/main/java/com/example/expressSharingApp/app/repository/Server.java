@@ -8,25 +8,25 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class Server extends Thread{
-    public int port = 4000;
-    public ServerSocket serverSocket;
-    public Socket socket;
-    public OutputStream ops;
-    public HashMap<String , String> messages = new HashMap<String , String>();
-    public void run(){
-        try{
+    private int port = 4000;
+    private ServerSocket serverSocket;
+    private Socket socket;
+    private OutputStream ops;
+    private HashMap<String , String> messages ;
+    public Server(HashMap<String , String> messages){
+        this.messages = messages;
+    }
+    @Override
+    public void run() {
+        try {
             serverSocket = new ServerSocket(port);
             socket = serverSocket.accept();
             ops = socket.getOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(ops);
             oos.writeObject(messages);
-        }catch (IOException e){
+            socket.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("sending files");
-    }
-    public static void main(String[]args){
-        Server server = new Server();
-        server.start();
     }
 }

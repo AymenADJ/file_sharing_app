@@ -26,10 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expressSharingApp.R;
 import com.example.expressSharingApp.app.activities.SendingFilesActivity;
+import com.example.expressSharingApp.app.repository.Server;
 import com.example.expressSharingApp.app.repository.WifiDirectDevice;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHolder> {
     SendingFilesActivity context;
@@ -60,11 +62,24 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
                 public void onClick(View view) {
                     WifiP2pConfig config = new WifiP2pConfig();
                     config.deviceAddress = device.getAddress();
+                    config.groupOwnerIntent = 15;
                     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         context.manager.connect(context.channel, config, new WifiP2pManager.ActionListener() {
                             @Override
                             public void onSuccess() {
                                 Toast.makeText(context, "connection succeeded", Toast.LENGTH_SHORT).show();
+                                context.manager.requestConnectionInfo(context.channel, new WifiP2pManager.ConnectionInfoListener() {
+                                    @Override
+                                    public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
+                                        Toast.makeText(context, wifiP2pInfo.toString(), Toast.LENGTH_SHORT).show();
+                                        if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
+                                            Toast.makeText(context, "Server", Toast.LENGTH_SHORT).show();
+                                            sendMessages("test" , "hello world");
+                                        } else if (wifiP2pInfo.groupFormed) {
+                                            Toast.makeText(context, "Client-ERROR", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
@@ -90,5 +105,12 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeersViewHol
             super(itemView);
             name = itemView.findViewById(R.id.peer_name);
         }
+    }
+
+    private void sendMessages(String key , String value){
+        HashMap<String , String> messages = new HashMap<>();
+        messages.put(key , value);
+        Server server = new Server(messages);
+        server.start();
     }
 }
